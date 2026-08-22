@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Your Trip — South Asia Getaways</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     FRAME NOTES (delete this comment block once you're done)
+     - This is a skeleton, not the finished site. Every section
+       below is marked FRAME — build each one out piece by piece.
+     - All colors/fonts are CSS variables in :root — change a
+       value there and it updates everywhere.
+     - Liquid-glass card system (.lg-card), the WebGL shader
+       behind the hero, and scroll-reveal are already wired up
+       and working — same pattern as your portfolio, recolored
+       for Plan Your Trip's navy/monochrome brand.
+     - Destination images below use placehold.co placeholders —
+       swap the <img src="..."> with your real photos later.
+  ========================================================= */
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0a0f1a;
+    --navy-2: #0d1424;
+    --ink: #ffffff;
+    --ink-dim: rgba(255,255,255,0.62);
+    --ink-faint: rgba(255,255,255,0.32);
+    --accent: #d9a44a;              /* placeholder accent — swap freely */
+    --accent-soft: rgba(217,164,74,0.12);
+    --glass-bg: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.09);
+    --glass-border-hover: rgba(217,164,74,0.4);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--ink-dim);
+    font-family: var(--font-body);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 15% 15%, rgba(217,164,74,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 85%, rgba(40,70,140,0.25) 0%, transparent 60%),
+      linear-gradient(160deg, var(--navy) 0%, #090e1a 45%, var(--navy) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 68px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+    background: rgba(10,15,26,0.7);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo img { height: 28px; width: auto; filter: invert(1); } /* invert: logo is black-on-white, this makes it white for navy nav */
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--ink-dim); text-decoration: none; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent); color: var(--navy); border: none;
+    padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.03em; text-decoration: none; cursor: pointer;
+  }
+  @media (max-width: 780px) { .nav-links { display: none; } }
+
+  /* ── HERO ── */
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding-top: 68px; overflow: hidden; }
+  #shader-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.5; pointer-events: none; }
+
+  .hero-inner { position: relative; z-index: 1; padding: 5rem 0; max-width: 700px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .eyebrow::before { content: ''; width: 26px; height: 1px; background: var(--accent); }
+
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(2.4rem, 5.5vw, 4rem); line-height: 1.1; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1.25rem;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero-sub { font-size: 1.05rem; max-width: 34em; margin-bottom: 2.25rem; }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .btn-primary {
+    background: var(--accent); color: var(--navy); border: none;
+    padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.03em; text-decoration: none; display: inline-block; cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+  .btn-ghost {
+    background: transparent; color: var(--ink-dim); border: 1px solid var(--glass-border);
+    padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 500;
+    text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--ink-faint); color: var(--ink); }
+
+  /* quick-search style bar — FRAME: wire this up as a real destination/date/pax picker later */
+  .hero-search {
+    display: flex; gap: 0; background: var(--glass-bg); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 6px; backdrop-filter: blur(10px); max-width: 560px;
+  }
+  .hero-search .field { flex: 1; padding: 10px 16px; }
+  .hero-search .field b { display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px; }
+  .hero-search .field span { font-size: 13.5px; color: var(--ink); }
+  .hero-search .go { background: var(--accent); color: var(--navy); border: none; border-radius: 8px; padding: 0 22px; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 6rem 0; position: relative; z-index: 1; }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); max-width: 60px; }
+  .section-title {
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em;
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem); color: var(--ink); margin-bottom: 1rem;
+  }
+  .section-desc { max-width: 34em; margin-bottom: 3rem; }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border) 30%, var(--glass-border) 70%, transparent); }
+
+  /* ── LIQUID GLASS CARD SYSTEM (reused pattern) ── */
+  .lg-card {
+    position: relative; isolation: isolate; overflow: hidden; border-radius: 14px;
+    border: 1px solid var(--glass-border); background: var(--glass-bg);
+    transition: border-color 0.3s, transform 0.4s cubic-bezier(0.175,0.885,0.32,1.6);
+  }
+  .lg-card::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    backdrop-filter: blur(12px) saturate(1.3); -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    z-index: 0; pointer-events: none;
+  }
+  .lg-card::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(217,164,74,0.04) 100%);
+    z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
+  }
+  .lg-card:hover::after { opacity: 1; }
+  .lg-card:hover { border-color: var(--glass-border-hover); transform: translateY(-3px); }
+  .lg-card > * { position: relative; z-index: 2; }
+  .lg-card .lg-shimmer {
+    position: absolute; inset: 0; z-index: 1; border-radius: inherit;
+    background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.07) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .lg-card:hover .lg-shimmer { opacity: 1; }
+  .lg-card .lg-sweep {
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.175,0.885,0.32,1.275); z-index: 3;
+  }
+  .lg-card:hover .lg-sweep { transform: scaleX(1); }
+
+  /* ── DESTINATIONS (FRAME: 4 starter cards — Sri Lanka / Indonesia / Thailand / Nepal) ── */
+  .dest-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+  @media (max-width: 1000px) { .dest-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .dest-grid { grid-template-columns: 1fr; } }
+
+  .dest-card { display: flex; flex-direction: column; }
+  .dest-card img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
+  .dest-card .dest-body { padding: 1.1rem 1.25rem 1.4rem; }
+  .dest-card .dest-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; }
+  .dest-card .dest-line { font-size: 13px; color: var(--ink-dim); margin-bottom: 0.9rem; }
+  .dest-card .dest-link { font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+
+  /* ── FEATURES / WHY-US (FRAME: 3 placeholder cards) ── */
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  @media (max-width: 800px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card { padding: 2rem; }
+  .feature-icon {
+    width: 42px; height: 42px; background: var(--accent-soft); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;
+  }
+  .feature-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+  .feature-desc { font-size: 13.5px; }
+
+  /* ── CTA / CONTACT (FRAME) ── */
+  .cta-section { text-align: center; }
+  .cta-title { font-family: var(--font-display); font-size: clamp(1.7rem, 3.2vw, 2.5rem); font-weight: 700; color: var(--ink); margin-bottom: 1rem; }
+  .cta-sub { max-width: 30em; margin: 0 auto 2rem; }
+  .cta-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid var(--glass-border); padding: 2rem 0; position: relative; z-index: 1; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-left { font-size: 13px; color: var(--ink-faint); }
+  .footer-right { display: flex; gap: 1.5rem; }
+  .footer-right a { font-size: 13px; color: var(--ink-faint); text-decoration: none; transition: color 0.2s; }
+  .footer-right a:hover { color: var(--accent); }
+
+  /* ── SCROLL REVEAL (reused pattern) ── */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#top" class="nav-logo">
+    <img src="assets/logo.png" alt="Plan Your Trip">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#destinations">Destinations</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/8801891505075" target="_blank" class="nav-cta">Book a Trip</a>
+</nav>
+
+<!-- HERO — FRAME: shader is live, swap headline/copy as you go -->
+<section class="hero" id="top">
+  <canvas id="shader-canvas"></canvas>
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="eyebrow">Dhaka → South Asia & Beyond</div>
+      <h1 class="reveal">Group trips to the places <span class="accent">worth flying for.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">Plan Your Trip runs guided group departures to Sri Lanka, Indonesia, Thailand and Nepal — booked over WhatsApp, planned down to the last detail.</p>
+
+      <div class="hero-search reveal reveal-delay-2">
+        <div class="field"><b>Destination</b><span>Sri Lanka</span></div>
+        <div class="field"><b>Month</b><span>September 2026</span></div>
+        <div class="field"><b>Group Size</b><span>2 people</span></div>
+        <button class="go">Search</button>
+      </div>
+
+      <div class="hero-actions reveal reveal-delay-3" style="margin-top:2rem;">
+        <a href="#destinations" class="btn-primary">See Destinations</a>
+        <a href="https://wa.me/8801891505075" target="_blank" class="btn-ghost">Chat on WhatsApp ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESTINATIONS — FRAME: 4 starter cards, swap placehold.co images for real photos -->
+<section id="destinations">
+  <div class="wrap">
+    <div class="section-label reveal">Where We Go</div>
+    <h2 class="section-title reveal reveal-delay-1">Four routes to start with.</h2>
+    <p class="section-desc reveal reveal-delay-2">Each of these is a placeholder card — duplicate the block in the HTML to add more destinations later.</p>
+
+    <div class="dest-grid">
+      <div class="dest-card lg-card reveal reveal-delay-1">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <img src="https://placehold.co/500x625/0a0f1a/d9a44a?text=Sri+Lanka" alt="Sri Lanka">
+        <div class="dest-body">
+          <div class="dest-name">Sri Lanka</div>
+          <div class="dest-line">Galle Fort, Nine Arch Bridge, tea country.</div>
+          <a href="#contact" class="dest-link">Explore →</a>
+        </div>
+      </div>
+      <div class="dest-card lg-card reveal reveal-delay-2">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <img src="https://placehold.co/500x625/0a0f1a/d9a44a?text=Indonesia" alt="Indonesia">
+        <div class="dest-body">
+          <div class="dest-name">Indonesia</div>
+          <div class="dest-line">Bali beaches, rice terraces, temple towns.</div>
+          <a href="#contact" class="dest-link">Explore →</a>
+        </div>
+      </div>
+      <div class="dest-card lg-card reveal reveal-delay-3">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <img src="https://placehold.co/500x625/0a0f1a/d9a44a?text=Thailand" alt="Thailand">
+        <div class="dest-body">
+          <div class="dest-name">Thailand</div>
+          <div class="dest-line">Bangkok streets, islands, and night markets.</div>
+          <a href="#contact" class="dest-link">Explore →</a>
+        </div>
+      </div>
+      <div class="dest-card lg-card reveal reveal-delay-4">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <img src="https://placehold.co/500x625/0a0f1a/d9a44a?text=Nepal" alt="Nepal">
+        <div class="dest-body">
+          <div class="dest-name">Nepal</div>
+          <div class="dest-line">Mountain towns, short treks, big views.</div>
+          <a href="#contact" class="dest-link">Explore →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHY US — FRAME: 3 placeholder cards, write real reasons as you build -->
+<section id="why">
+  <div class="wrap">
+    <div class="section-label reveal">Why Plan Your Trip</div>
+    <h2 class="section-title reveal reveal-delay-1">[Frame — fill in 3 real reasons]</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card lg-card reveal reveal-delay-1">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <div class="feature-title">[Reason one]</div>
+        <div class="feature-desc">Placeholder text — replace with real copy.</div>
+      </div>
+      <div class="feature-card lg-card reveal reveal-delay-2">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M8 6h22a3 3 0 013 3v14a3 3 0 01-3 3H15l-7 6V9a3 3 0 013-3z" transform="translate(-8,-6)"/></svg></div>
+        <div class="feature-title">[Reason two]</div>
+        <div class="feature-desc">Placeholder text — replace with real copy.</div>
+      </div>
+      <div class="feature-card lg-card reveal reveal-delay-3">
+        <div class="lg-shimmer"></div><div class="lg-sweep"></div>
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <div class="feature-title">[Reason three]</div>
+        <div class="feature-desc">Placeholder text — replace with real copy.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT — FRAME -->
+<section id="contact" class="cta-section">
+  <div class="wrap">
+    <div class="section-label reveal" style="justify-content:center;">Ready When You Are</div>
+    <h2 class="cta-title reveal reveal-delay-1">[Frame — CTA headline]</h2>
+    <p class="cta-sub reveal reveal-delay-2">Placeholder line — write the real closing pitch here.</p>
+    <div class="cta-links reveal reveal-delay-3">
+      <a href="https://wa.me/8801891505075" target="_blank" class="btn-primary">Chat on WhatsApp</a>
+      <a href="mailto:planyourtrip.fly@gmail.com" class="btn-ghost">Email Instead</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-left">© 2026 Plan Your Trip · Baridhara, Dhaka</div>
+      <div class="footer-right">
+        <a href="mailto:planyourtrip.fly@gmail.com">Email</a>
+        <a href="https://www.instagram.com/planyourtrip.bd/" target="_blank">Instagram</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── SCROLL REVEAL ── */
+var revealObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+
+/* ── LIQUID GLASS MOUSE TRACKING ── */
+document.querySelectorAll('.lg-card').forEach(function(card){
+  card.addEventListener('mousemove', function(e){
+    var rect = card.getBoundingClientRect();
+    var x = ((e.clientX - rect.left) / rect.width) * 100;
+    var y = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
+  });
+});
+
+/* ── NAV SCROLL EFFECT ── */
+window.addEventListener('scroll', function(){
+  var nav = document.querySelector('nav');
+  nav.style.background = window.scrollY > 50 ? 'rgba(10,15,26,0.92)' : 'rgba(10,15,26,0.7)';
+});
+
+/* ── HERO WEBGL SHADER — recolored for Plan Your Trip (navy → white → gold) ──
+   Same ring-glow technique as the portfolio version, different color ramp.
+   Tweak the three vec3 colors below to change the mood. */
+(function(){
+  var canvas = document.getElementById('shader-canvas');
+  if (!canvas) return;
+  var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+
+  var vertSrc = 'attribute vec2 position; void main(){ gl_Position = vec4(position,0.0,1.0); }';
+  var fragSrc = [
+    'precision highp float;',
+    'uniform vec2 resolution;',
+    'uniform float time;',
+    'void main(void){',
+    '  vec2 uv = (gl_FragCoord.xy*2.0 - resolution.xy)/min(resolution.x,resolution.y);',
+    '  float t = time*0.05;',
+    '  float lineWidth = 0.002;',
+    '  float intensity = 0.0;',
+    '  for(int i=0;i<5;i++){',
+    '    float fi = float(i);',
+    '    float ring = lineWidth*fi*fi/abs(fract(t+fi*0.01)*5.0 - length(uv) + mod(uv.x+uv.y,0.2));',
+    '    intensity += ring;',
+    '  }',
+    '  float rad = length(uv);',
+    '  vec3 navy = vec3(0.04,0.06,0.11);',
+    '  vec3 white = vec3(1.0,1.0,1.0);',
+    '  vec3 gold = vec3(0.85,0.64,0.29);',
+    '  vec3 ramp = mix(navy, white, smoothstep(0.0,0.42,rad));',
+    '  ramp = mix(ramp, gold, smoothstep(0.42,1.05,rad));',
+    '  vec3 color = ramp*intensity;',
+    '  color += vec3(pow(intensity,3.0))*0.12;',
+    '  float vignette = 1.0 - smoothstep(0.55,1.35,rad);',
+    '  color *= vignette;',
+    '  gl_FragColor = vec4(color,1.0);',
+    '}'
+  ].join('\n');
+
+  function compileShader(type, src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+  var prog = gl.createProgram();
+  gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vertSrc));
+  gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fragSrc));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  var pos = gl.getAttribLocation(prog, 'position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+  var uRes = gl.getUniformLocation(prog, 'resolution');
+  var uTime = gl.getUniformLocation(prog, 'time');
+  var time = 0;
+
+  function resize(){
+    var hero = canvas.parentElement;
+    canvas.width = hero.clientWidth * (window.devicePixelRatio||1);
+    canvas.height = hero.clientHeight * (window.devicePixelRatio||1);
+    canvas.style.width = hero.clientWidth+'px';
+    canvas.style.height = hero.clientHeight+'px';
+    gl.viewport(0,0,canvas.width,canvas.height);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function render(){
+    time += 0.05;
+    gl.uniform1f(uTime, time);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+</script>
+
+</body>
+</html>
