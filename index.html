@@ -153,6 +153,12 @@
   .hero-search .field span { font-size: 13.5px; color: var(--ink); }
   .hero-search .go { background: var(--accent); color: var(--navy); border: none; border-radius: 8px; padding: 0 22px; font-weight: 700; font-size: 13px; cursor: pointer; }
 
+  @media (max-width: 560px) {
+    .hero-search { flex-direction: column; gap: 8px; background: transparent; border: none; padding: 0; backdrop-filter: none; }
+    .hero-search .field { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 10px; }
+    .hero-search .go { width: 100%; padding: 12px; }
+  }
+
   /* ── SECTION SHARED ── */
   section { padding: 6rem 0; position: relative; z-index: 1; }
   .section-label {
