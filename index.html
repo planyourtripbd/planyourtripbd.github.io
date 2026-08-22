@@ -426,6 +426,7 @@ window.addEventListener('scroll', function(){
 (function(){
   var canvas = document.getElementById('shader-canvas');
   if (!canvas) return;
+  if (getComputedStyle(canvas).display === 'none') return; /* canvas is hidden (the hero photo replaced it) — bail out here instead of animating invisibly forever in the background, which was quietly burning CPU/battery on every phone that opened the site */
   var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   if (!gl) return;
 
