@@ -87,10 +87,32 @@
   @media (max-width: 780px) { .nav-links { display: none; } }
 
   /* ── HERO ── */
-  .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding-top: 68px; overflow: hidden; }
-  #shader-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.5; pointer-events: none; }
+  .hero { position: relative; padding-top: 68px; overflow: hidden; }
+  /* shader is swapped out for the photo below — kept in the markup/JS in case you
+     ever want to layer it back in */
+  #shader-canvas { display: none; position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.5; pointer-events: none; }
 
-  .hero-inner { position: relative; z-index: 1; padding: 5rem 0; max-width: 700px; }
+  /* photo band — its OWN block, sitting above the copy rather than behind it.
+     Why: the photo has "PLAN YOUR TRIP" baked into it, so if the real headline
+     text sits on top of the photo the two wordmarks collide and both become
+     unreadable. Keeping them stacked instead of layered fixes that outright. */
+  .hero-photo {
+    position: relative; height: 62vh; min-height: 460px; max-height: 640px;
+    background: url('assets/hero-bg.jpg') center 42% / cover no-repeat;
+  }
+  .hero-photo::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(10,15,26,0) 55%, var(--navy) 96%);
+  }
+  /* the photo is 16:9 — on a narrow/tall phone screen a 62vh-tall band forces
+     background-size:cover to crop most of the width away and chop the wordmark
+     in half. Making the band shorter (flatter) on phones keeps the aspect ratio
+     closer to the photo's own, so more of it stays visible side-to-side. */
+  @media (max-width: 640px) {
+    .hero-photo { height: 34vh; min-height: 240px; max-height: 320px; }
+  }
+
+  .hero-inner { position: relative; z-index: 1; padding: 2.5rem 0 4.5rem; max-width: 700px; }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
     font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
@@ -243,6 +265,7 @@
 <!-- HERO — FRAME: shader is live, swap headline/copy as you go -->
 <section class="hero" id="top">
   <canvas id="shader-canvas"></canvas>
+  <div class="hero-photo"></div>
   <div class="wrap">
     <div class="hero-inner">
       <div class="eyebrow">Dhaka → South Asia & Beyond</div>
