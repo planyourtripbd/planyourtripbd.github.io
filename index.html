@@ -23,11 +23,11 @@
     --ink: #ffffff;
     --ink-dim: rgba(255,255,255,0.62);
     --ink-faint: rgba(255,255,255,0.32);
-    --accent: #d9a44a;
-    --accent-soft: rgba(217,164,74,0.12);
+    --accent: #2dd4bf;
+    --accent-soft: rgba(45,212,191,0.12);
     --glass-bg: rgba(255,255,255,0.04);
     --glass-border: rgba(255,255,255,0.09);
-    --glass-border-hover: rgba(217,164,74,0.4);
+    --glass-border-hover: rgba(45,212,191,0.4);
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
     --page-mid: #0a141d;
@@ -42,11 +42,11 @@
     --ink: #17222c;
     --ink-dim: rgba(23,34,44,0.68);
     --ink-faint: rgba(23,34,44,0.4);
-    --accent: #bd7d1f;
-    --accent-soft: rgba(189,125,31,0.12);
+    --accent: #0d9488;
+    --accent-soft: rgba(13,148,136,0.12);
     --glass-bg: rgba(23,34,44,0.035);
     --glass-border: rgba(23,34,44,0.1);
-    --glass-border-hover: rgba(189,125,31,0.45);
+    --glass-border-hover: rgba(13,148,136,0.45);
     --page-mid: #f4eee0;
     --nav-bg: rgba(250,247,240,0.7);
     --nav-bg-solid: rgba(250,247,240,0.92);
@@ -75,7 +75,7 @@
 
   body::before {
     background:
-      radial-gradient(ellipse 70% 55% at 15% 15%, rgba(217,164,74,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 55% at 15% 15%, rgba(45,212,191,0.05) 0%, transparent 60%),
       radial-gradient(ellipse 60% 50% at 90% 85%, rgba(40,70,140,0.25) 0%, transparent 60%),
       linear-gradient(160deg, var(--navy) 0%, var(--page-mid) 45%, var(--navy) 100%);
     opacity: 1;
@@ -83,7 +83,7 @@
 
   body::after {
     background:
-      radial-gradient(ellipse 70% 55% at 15% 15%, rgba(189,125,31,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 55% at 15% 15%, rgba(13,148,136,0.07) 0%, transparent 60%),
       radial-gradient(ellipse 60% 50% at 90% 85%, rgba(120,170,220,0.22) 0%, transparent 60%),
       linear-gradient(160deg, var(--navy) 0%, var(--page-mid) 45%, var(--navy) 100%);
     opacity: 0;
@@ -319,7 +319,7 @@
     box-shadow:
       inset 0 1px 1px rgba(255,255,255,0.4),
       inset 0 -1px 1px rgba(0,0,0,0.1),
-      0 6px 18px rgba(217,164,74,0.35);
+      0 6px 18px rgba(45,212,191,0.35);
   }
 
   .hero-search {
@@ -378,7 +378,7 @@
   }
   .lg-card::after {
     content: ''; position: absolute; inset: 0; border-radius: inherit;
-    background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(217,164,74,0.04) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(45,212,191,0.04) 100%);
     z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
   }
   .lg-card:hover::after { opacity: 1; }
