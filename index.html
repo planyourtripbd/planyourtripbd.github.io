@@ -296,15 +296,42 @@
   }
   .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
   .btn-ghost {
-    background: transparent; color: var(--ink-dim); border: 1px solid var(--glass-border);
+    position: relative;
+    background: var(--glass-bg); color: var(--ink-dim); border: 1px solid var(--glass-border);
     padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 500;
-    text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s;
+    text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s, background-color 0.35s ease;
+    backdrop-filter: blur(10px) saturate(1.3);
+    backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.3);
+    -webkit-backdrop-filter: blur(10px) saturate(1.3);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.35),
+      inset 0 -1px 1px rgba(0,0,0,0.08),
+      0 4px 14px rgba(0,0,0,0.14);
   }
   .btn-ghost:hover { border-color: var(--ink-faint); color: var(--ink); }
 
+  /* Optional opt-in "glass gold" CTA finish — add class="pyt-glass-cta" to .btn-primary or .nav-cta if you want the primary button glassy too (see chat note on why it's off by default) */
+  .btn-primary.pyt-glass-cta, .nav-cta.pyt-glass-cta {
+    background: color-mix(in srgb, var(--accent) 55%, transparent);
+    backdrop-filter: blur(10px) saturate(1.4);
+    backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.4);
+    -webkit-backdrop-filter: blur(10px) saturate(1.4);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.4),
+      inset 0 -1px 1px rgba(0,0,0,0.1),
+      0 6px 18px rgba(217,164,74,0.35);
+  }
+
   .hero-search {
     display: flex; gap: 0; background: var(--glass-bg); border: 1px solid var(--glass-border);
-    border-radius: 12px; padding: 6px; backdrop-filter: blur(10px); max-width: 560px;
+    border-radius: 12px; padding: 6px; max-width: 560px;
+    backdrop-filter: blur(10px);
+    backdrop-filter: url(#pyt-liquid-glass) blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.3),
+      inset 0 -1px 1px rgba(0,0,0,0.08),
+      0 6px 18px rgba(0,0,0,0.16);
   }
   .hero-search .field { flex: 1; padding: 10px 16px; }
   .hero-search .field b { display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px; }
@@ -340,7 +367,13 @@
   }
   .lg-card::before {
     content: ''; position: absolute; inset: 0; border-radius: inherit;
-    backdrop-filter: blur(12px) saturate(1.3); -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    backdrop-filter: blur(12px) saturate(1.3);
+    backdrop-filter: url(#pyt-liquid-glass) blur(12px) saturate(1.3);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    box-shadow:
+      inset 0 1px 1px rgba(255,255,255,0.3),
+      inset 0 -1px 1px rgba(0,0,0,0.08),
+      0 8px 22px rgba(0,0,0,0.18);
     z-index: 0; pointer-events: none;
   }
   .lg-card::after {
@@ -494,6 +527,19 @@
       <span class="pyt-cloud-bg pyt-cloud-bg-4"></span>
     </div>
   </div>
+
+  <!-- Liquid Glass SVG filter — used by every glass surface below (cards, ghost buttons, search bar). Chrome/Edge get the real distortion; Safari/Firefox silently fall back to plain blur. -->
+  <svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+    <defs>
+      <filter id="pyt-liquid-glass" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="2" result="turbulence"/>
+        <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise"/>
+        <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="20" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+        <feGaussianBlur in="displaced" stdDeviation="0.6" result="finalBlur"/>
+        <feComposite in="finalBlur" in2="finalBlur" operator="over"/>
+      </filter>
+    </defs>
+  </svg>
 
 <!-- NAV -->
 <nav>
