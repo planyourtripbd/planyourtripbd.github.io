@@ -12,6 +12,14 @@
       var saved = localStorage.getItem('pyt-theme');
       if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
     } catch(e){}
+    try {
+      /* Chromium-only feature check (Paint API) — used to gate the SVG liquid-glass
+         distortion so Safari/Firefox never even attempt it, instead of relying on
+         CSS to silently fall back (which is not reliable across engines). */
+      if (window.CSS && CSS.supports && CSS.supports('background', 'paint(x)')) {
+        document.documentElement.classList.add('pyt-glass-fx');
+      }
+    } catch(e){}
   })();
 </script>
 <style>
@@ -301,37 +309,40 @@
     padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 500;
     text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s, background-color 0.35s ease;
     backdrop-filter: blur(10px) saturate(1.3);
-    backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.3);
     -webkit-backdrop-filter: blur(10px) saturate(1.3);
     box-shadow:
       inset 0 1px 1px rgba(255,255,255,0.35),
       inset 0 -1px 1px rgba(0,0,0,0.08),
       0 4px 14px rgba(0,0,0,0.14);
   }
+  html.pyt-glass-fx .btn-ghost { backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.3); }
   .btn-ghost:hover { border-color: var(--ink-faint); color: var(--ink); }
 
   /* Optional opt-in "glass gold" CTA finish — add class="pyt-glass-cta" to .btn-primary or .nav-cta if you want the primary button glassy too (see chat note on why it's off by default) */
   .btn-primary.pyt-glass-cta, .nav-cta.pyt-glass-cta {
     background: color-mix(in srgb, var(--accent) 55%, transparent);
     backdrop-filter: blur(10px) saturate(1.4);
-    backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.4);
     -webkit-backdrop-filter: blur(10px) saturate(1.4);
     box-shadow:
       inset 0 1px 1px rgba(255,255,255,0.4),
       inset 0 -1px 1px rgba(0,0,0,0.1),
       0 6px 18px rgba(45,212,191,0.35);
   }
+  html.pyt-glass-fx .btn-primary.pyt-glass-cta,
+  html.pyt-glass-fx .nav-cta.pyt-glass-cta { backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.4); }
 
   .hero-search {
     display: flex; gap: 0; background: var(--glass-bg); border: 1px solid var(--glass-border);
     border-radius: 12px; padding: 6px; max-width: 560px;
     backdrop-filter: blur(10px);
-    backdrop-filter: url(#pyt-liquid-glass) blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow:
       inset 0 1px 1px rgba(255,255,255,0.3),
       inset 0 -1px 1px rgba(0,0,0,0.08),
       0 6px 18px rgba(0,0,0,0.16);
+  }
+  @media (min-width: 561px) {
+    html.pyt-glass-fx .hero-search { backdrop-filter: url(#pyt-liquid-glass) blur(10px); }
   }
   .hero-search .field { flex: 1; padding: 10px 16px; }
   .hero-search .field b { display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px; }
@@ -339,7 +350,7 @@
   .hero-search .go { background: var(--accent); color: var(--on-accent); border: none; border-radius: 8px; padding: 0 22px; font-weight: 700; font-size: 13px; cursor: pointer; transition: background-color 0.35s ease; }
 
   @media (max-width: 560px) {
-    .hero-search { flex-direction: column; gap: 8px; background: transparent; border: none; padding: 0; backdrop-filter: none; }
+    .hero-search { flex-direction: column; gap: 8px; background: transparent; border: none; padding: 0; backdrop-filter: none; box-shadow: none; }
     .hero-search .field { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 10px; }
     .hero-search .go { width: 100%; padding: 12px; }
   }
@@ -494,9 +505,9 @@
   .cta-scene .btn-ghost {
     background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.35); color: #fff;
     backdrop-filter: blur(10px) saturate(1.3);
-    backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.3);
     -webkit-backdrop-filter: blur(10px) saturate(1.3);
   }
+  html.pyt-glass-fx .cta-scene .btn-ghost { backdrop-filter: url(#pyt-liquid-glass) blur(10px) saturate(1.3); }
   .cta-scene .btn-ghost:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
   @media (max-width: 640px) {
     .cta-scene { min-height: 360px; padding: 2.5rem 1.25rem; border-radius: 20px; }
