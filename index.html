@@ -305,8 +305,10 @@
     color: #20242b; text-transform: uppercase;
   }
   .pyt-parallax__layer-img--mountain {
-    position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
-    width: 100%; height: auto; display: block;
+    position: absolute; inset: 0; z-index: 3;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center bottom;
+    display: block;
   }
   .pyt-parallax__fade {
     position: absolute; inset: 0; z-index: 4;
