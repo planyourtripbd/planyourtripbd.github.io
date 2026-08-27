@@ -348,7 +348,7 @@
         <div class="field"><b>Destination</b><span>Sri Lanka</span></div>
         <div class="field"><b>Month</b><span>September 2026</span></div>
         <div class="field"><b>Group Size</b><span>2 people</span></div>
-        <button class="go" onclick="document.querySelector('#destinations').scrollIntoView({behavior:'smooth'})">Search</button>
+        <button class="go" onclick="pytLenis ? pytLenis.scrollTo('#destinations', {duration:1.2}) : document.querySelector('#destinations').scrollIntoView({behavior:'smooth'})">Search</button>
       </div>
 
       <div class="hero-actions reveal reveal-delay-3" style="margin-top:2rem;">
