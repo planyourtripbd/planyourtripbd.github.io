@@ -96,7 +96,7 @@
 .pyt-atmosphere {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   overflow: hidden;
   pointer-events: none;
 }
@@ -140,10 +140,10 @@
   transform: translateY(-50%);
 }
 @keyframes pytShoot {
-  0% { opacity: 0; transform: translate(0,0) rotate(215deg); }
+  0% { opacity: 0; transform: translate(0,0) rotate(144deg); }
   8% { opacity: 1; }
   75% { opacity: 1; }
-  100% { opacity: 0; transform: translate(-420px, 300px) rotate(215deg); }
+  100% { opacity: 0; transform: translate(-420px, 300px) rotate(144deg); }
 }
 
 .pyt-clouds-layer {
@@ -151,6 +151,7 @@
   inset: 0;
   opacity: 0;
   transition: opacity 0.9s ease;
+  background: linear-gradient(180deg, #4a9de8 0%, #7ec4f0 42%, #bfe2f5 75%, #eaf6ff 100%);
 }
 [data-theme="light"] .pyt-clouds-layer { opacity: 1; }
 
