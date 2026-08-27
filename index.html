@@ -15,44 +15,25 @@
   })();
 </script>
 <style>
-  /* =========================================================
-     FRAME NOTES (delete this comment block once you're done)
-     - This is a skeleton, not the finished site. Every section
-       below is marked FRAME — build each one out piece by piece.
-     - All colors/fonts are CSS variables in :root — change a
-       value there and it updates everywhere.
-     - Liquid-glass card system (.lg-card) and scroll-reveal are
-       already wired up and working — same pattern as your
-       portfolio, recolored for Plan Your Trip's navy/monochrome
-       brand. (The hero used to have a WebGL shader background —
-       that's been removed now that a real hero photo is in place.)
-     - Destination images below use placehold.co placeholders —
-       swap the <img src="..."> with your real photos later.
-     - "Why Us" and the closing CTA still need real copy from the
-       client — look for [Frame — ...] placeholders below.
-  ========================================================= */
-
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --navy: #0f1c28;   /* real brand navy — sampled from the logo's photo backdrop */
-    --navy-2: #1b2f42; /* lighter surface tone, same source */
+    --navy: #0f1c28;
+    --navy-2: #1b2f42;
     --ink: #ffffff;
     --ink-dim: rgba(255,255,255,0.62);
     --ink-faint: rgba(255,255,255,0.32);
-    --accent: #d9a44a;              /* kept — the logo itself is pure navy + white, no color in the mark to pull an accent from, so this stays as the one functional "action" color for buttons/CTAs */
+    --accent: #d9a44a;
     --accent-soft: rgba(217,164,74,0.12);
     --glass-bg: rgba(255,255,255,0.04);
     --glass-border: rgba(255,255,255,0.09);
     --glass-border-hover: rgba(217,164,74,0.4);
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
-
-    /* theme-aware tokens */
     --page-mid: #0a141d;
     --nav-bg: rgba(15,28,40,0.7);
     --nav-bg-solid: rgba(15,28,40,0.92);
-    --on-accent: #14212c;   /* fixed dark ink for text on the gold accent — stays dark in both themes */
+    --on-accent: #14212c;
   }
 
   [data-theme="light"] {
@@ -111,6 +92,111 @@
   [data-theme="light"] body::before { opacity: 0; }
   [data-theme="light"] body::after { opacity: 1; }
 
+/* ============ Sitewide Atmosphere (Night Sky / Day Sky) ============ */
+.pyt-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pyt-stars-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 0.9s ease;
+}
+[data-theme="light"] .pyt-stars-layer { opacity: 0; }
+
+.pyt-star-bg {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: pytStarTwinkle ease-in-out infinite;
+}
+@keyframes pytStarTwinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.pyt-shooting-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  animation: pytShoot 1.4s linear forwards;
+}
+.pyt-shooting-star::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.9), transparent);
+  transform: translateY(-50%);
+}
+@keyframes pytShoot {
+  0% { opacity: 0; transform: translate(0,0) rotate(215deg); }
+  8% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-420px, 300px) rotate(215deg); }
+}
+
+.pyt-clouds-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+[data-theme="light"] .pyt-clouds-layer { opacity: 1; }
+
+.pyt-cloud-bg {
+  position: absolute;
+  background: #ffffff;
+  border-radius: 50%;
+  filter: blur(1px);
+  opacity: 0.85;
+}
+.pyt-cloud-bg::before,
+.pyt-cloud-bg::after {
+  content: '';
+  position: absolute;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.pyt-cloud-bg-1 { width: 140px; height: 46px; top: 8%; left: -20%; animation: pytDrift1 55s linear infinite; }
+.pyt-cloud-bg-1::before { width: 70px; height: 70px; top: -34px; left: 18px; }
+.pyt-cloud-bg-1::after { width: 54px; height: 54px; top: -22px; left: 74px; }
+
+.pyt-cloud-bg-2 { width: 100px; height: 36px; top: 22%; left: -20%; animation: pytDrift2 70s linear infinite; animation-delay: -20s; opacity: 0.7; }
+.pyt-cloud-bg-2::before { width: 54px; height: 54px; top: -26px; left: 12px; }
+.pyt-cloud-bg-2::after { width: 40px; height: 40px; top: -16px; left: 54px; }
+
+.pyt-cloud-bg-3 { width: 170px; height: 54px; top: 5%; left: -25%; animation: pytDrift3 90s linear infinite; animation-delay: -45s; opacity: 0.6; }
+.pyt-cloud-bg-3::before { width: 84px; height: 84px; top: -40px; left: 24px; }
+.pyt-cloud-bg-3::after { width: 64px; height: 64px; top: -26px; left: 92px; }
+
+.pyt-cloud-bg-4 { width: 90px; height: 30px; top: 16%; left: -20%; animation: pytDrift1 65s linear infinite; animation-delay: -35s; opacity: 0.55; }
+.pyt-cloud-bg-4::before { width: 44px; height: 44px; top: -20px; left: 10px; }
+.pyt-cloud-bg-4::after { width: 34px; height: 34px; top: -12px; left: 44px; }
+
+@keyframes pytDrift1 { from { transform: translateX(0); } to { transform: translateX(140vw); } }
+@keyframes pytDrift2 { from { transform: translateX(0); } to { transform: translateX(140vw); } }
+@keyframes pytDrift3 { from { transform: translateX(0); } to { transform: translateX(140vw); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .pyt-star-bg, .pyt-cloud-bg, .pyt-shooting-star { animation: none !important; }
+}
+
+@media (max-width: 640px) {
+  .pyt-cloud-bg-3, .pyt-cloud-bg-4 { display: none; }
+}
+
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
 
   /* ── NAV ── */
@@ -125,8 +211,8 @@
   }
   nav.scrolled { background: var(--nav-bg-solid); }
   .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-logo img { height: 28px; width: auto; filter: invert(1); transition: filter 0.4s ease; } /* invert: logo is black-on-white, this makes it white for navy nav */
-  [data-theme="light"] .nav-logo img { filter: none; } /* light nav bg — logo's own black works as-is */
+  .nav-logo img { height: 28px; width: auto; filter: invert(1); transition: filter 0.4s ease; }
+  [data-theme="light"] .nav-logo img { filter: none; }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
     color: var(--ink-dim); text-decoration: none; font-size: 13px; font-weight: 500;
@@ -141,7 +227,6 @@
   }
   .nav-right { display: flex; align-items: center; gap: 14px; }
 
-  /* hamburger button — hidden on desktop, only shown under 780px */
   .nav-toggle {
     display: none; flex-direction: column; justify-content: center; gap: 5px;
     width: 28px; height: 28px; background: none; border: none; cursor: pointer; padding: 0;
@@ -173,10 +258,6 @@
   /* ── HERO ── */
   .hero { position: relative; padding-top: 68px; overflow: hidden; }
 
-  /* photo band — its OWN block, sitting above the copy rather than behind it.
-     Why: the photo has "PLAN YOUR TRIP" baked into it, so if the real headline
-     text sits on top of the photo the two wordmarks collide and both become
-     unreadable. Keeping them stacked instead of layered fixes that outright. */
   .hero-photo {
     position: relative; height: 62vh; min-height: 460px; max-height: 640px;
     background: url('assets/hero-bg.jpg') center 42% / cover no-repeat;
@@ -220,7 +301,6 @@
   }
   .btn-ghost:hover { border-color: var(--ink-faint); color: var(--ink); }
 
-  /* quick-search style bar — FRAME: wire this up as a real destination/date/pax picker later */
   .hero-search {
     display: flex; gap: 0; background: var(--glass-bg); border: 1px solid var(--glass-border);
     border-radius: 12px; padding: 6px; backdrop-filter: blur(10px); max-width: 560px;
@@ -251,7 +331,7 @@
 
   .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border) 30%, var(--glass-border) 70%, transparent); }
 
-  /* ── LIQUID GLASS CARD SYSTEM (reused pattern) ── */
+  /* ── LIQUID GLASS CARD SYSTEM ── */
   .lg-card {
     position: relative; isolation: isolate; overflow: hidden; border-radius: 14px;
     border: 1px solid var(--glass-border); background: var(--glass-bg);
@@ -284,7 +364,7 @@
   }
   .lg-card:hover .lg-sweep { transform: scaleX(1); }
 
-  /* ── DESTINATIONS (FRAME: 4 starter cards — Sri Lanka / Indonesia / Thailand / Nepal) ── */
+  /* ── DESTINATIONS ── */
   .dest-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
   @media (max-width: 1000px) { .dest-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .dest-grid { grid-template-columns: 1fr; } }
@@ -296,7 +376,7 @@
   .dest-card .dest-line { font-size: 13px; color: var(--ink-dim); margin-bottom: 0.9rem; }
   .dest-card .dest-link { font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
 
-  /* ── FEATURES / WHY-US (FRAME: 3 placeholder cards) ── */
+  /* ── FEATURES / WHY-US ── */
   .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
   @media (max-width: 800px) { .feature-grid { grid-template-columns: 1fr; } }
   .feature-card { padding: 2rem; }
@@ -307,7 +387,7 @@
   .feature-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
   .feature-desc { font-size: 13.5px; }
 
-  /* ── CTA / CONTACT (FRAME) ── */
+  /* ── CTA / CONTACT ── */
   .cta-section { text-align: center; }
   .cta-title { font-family: var(--font-display); font-size: clamp(1.7rem, 3.2vw, 2.5rem); font-weight: 700; color: var(--ink); margin-bottom: 1rem; }
   .cta-sub { max-width: 30em; margin: 0 auto 2rem; }
@@ -321,7 +401,7 @@
   .footer-right a { font-size: 13px; color: var(--ink-faint); text-decoration: none; transition: color 0.2s; }
   .footer-right a:hover { color: var(--accent); }
 
-  /* ── SCROLL REVEAL (reused pattern) ── */
+  /* ── SCROLL REVEAL ── */
   .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
@@ -404,6 +484,15 @@
 </style>
 </head>
 <body>
+  <div class="pyt-atmosphere" aria-hidden="true">
+    <div class="pyt-stars-layer" id="pytStarsLayer"></div>
+    <div class="pyt-clouds-layer">
+      <span class="pyt-cloud-bg pyt-cloud-bg-1"></span>
+      <span class="pyt-cloud-bg pyt-cloud-bg-2"></span>
+      <span class="pyt-cloud-bg pyt-cloud-bg-3"></span>
+      <span class="pyt-cloud-bg pyt-cloud-bg-4"></span>
+    </div>
+  </div>
 
 <!-- NAV -->
 <nav>
@@ -469,7 +558,7 @@
   </div>
 </section>
 
-<!-- DESTINATIONS — FRAME: 4 starter cards, swap placehold.co images for real photos -->
+<!-- DESTINATIONS -->
 <section id="destinations">
   <div class="wrap">
     <div class="section-label reveal">Where We Go</div>
@@ -519,7 +608,7 @@
 
 <div class="divider"></div>
 
-<!-- WHY US — FRAME: 3 placeholder cards, write real reasons as you build -->
+<!-- WHY US -->
 <section id="why">
   <div class="wrap">
     <div class="section-label reveal">Why Plan Your Trip</div>
@@ -550,7 +639,7 @@
 
 <div class="divider"></div>
 
-<!-- CONTACT — FRAME -->
+<!-- CONTACT -->
 <section id="contact" class="cta-section">
   <div class="wrap">
     <div class="section-label reveal" style="justify-content:center;">Ready When You Are</div>
@@ -602,7 +691,7 @@ window.addEventListener('scroll', function(){
   navEl.classList.toggle('scrolled', window.scrollY > 50);
 });
 
-/* ── MOBILE NAV TOGGLE — hamburger button opens/closes the dropdown menu ── */
+/* ── MOBILE NAV TOGGLE ── */
 var navToggle = document.getElementById('navToggle');
 var navLinksEl = document.getElementById('navLinks');
 if (navToggle && navLinksEl) {
@@ -645,6 +734,41 @@ if (navToggle && navLinksEl) {
     applyTheme(next);
     try { localStorage.setItem('pyt-theme', next); } catch(e){}
   });
+})();
+
+/* ── SITEWIDE ATMOSPHERE: starfield + shooting stars + drifting clouds ── */
+(function(){
+  var starsLayer = document.getElementById('pytStarsLayer');
+  if (!starsLayer) return;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var STAR_COUNT = window.innerWidth < 640 ? 45 : 90;
+  var starsHTML = '';
+  for (var i = 0; i < STAR_COUNT; i++) {
+    var size = (Math.random() * 1.8 + 0.6).toFixed(2);
+    var top = (Math.random() * 100).toFixed(2);
+    var left = (Math.random() * 100).toFixed(2);
+    var duration = (Math.random() * 3 + 2).toFixed(2);
+    var delay = (Math.random() * 5).toFixed(2);
+    starsHTML += '<span class="pyt-star-bg" style="width:' + size + 'px;height:' + size + 'px;top:' + top + '%;left:' + left + '%;animation-duration:' + duration + 's;animation-delay:' + delay + 's;"></span>';
+  }
+  starsLayer.innerHTML = starsHTML;
+
+  if (!reduceMotion) {
+    function spawnShootingStar(){
+      if (document.documentElement.getAttribute('data-theme') === 'light') return;
+      var star = document.createElement('span');
+      star.className = 'pyt-shooting-star';
+      star.style.top = (Math.random() * 40 + 5) + '%';
+      star.style.left = (Math.random() * 60 + 30) + '%';
+      starsLayer.appendChild(star);
+      setTimeout(function(){ star.remove(); }, 1600);
+    }
+    (function loop(){
+      var next = Math.random() * 6000 + 5000;
+      setTimeout(function(){ spawnShootingStar(); loop(); }, next);
+    })();
+  }
 })();
 </script>
 
