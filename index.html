@@ -6,6 +6,14 @@
 <title>Plan Your Trip — South Asia Getaways</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  (function(){
+    try {
+      var saved = localStorage.getItem('pyt-theme');
+      if (saved === 'light') document.documentElement.setAttribute('data-theme','light');
+    } catch(e){}
+  })();
+</script>
 <style>
   /* =========================================================
      FRAME NOTES (delete this comment block once you're done)
@@ -39,6 +47,28 @@
     --glass-border-hover: rgba(217,164,74,0.4);
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
+
+    /* theme-aware tokens */
+    --page-mid: #0a141d;
+    --nav-bg: rgba(15,28,40,0.7);
+    --nav-bg-solid: rgba(15,28,40,0.92);
+    --on-accent: #14212c;   /* fixed dark ink for text on the gold accent — stays dark in both themes */
+  }
+
+  [data-theme="light"] {
+    --navy: #faf7f0;
+    --navy-2: #f0ead9;
+    --ink: #17222c;
+    --ink-dim: rgba(23,34,44,0.68);
+    --ink-faint: rgba(23,34,44,0.4);
+    --accent: #bd7d1f;
+    --accent-soft: rgba(189,125,31,0.12);
+    --glass-bg: rgba(23,34,44,0.035);
+    --glass-border: rgba(23,34,44,0.1);
+    --glass-border-hover: rgba(189,125,31,0.45);
+    --page-mid: #f4eee0;
+    --nav-bg: rgba(250,247,240,0.7);
+    --nav-bg-solid: rgba(250,247,240,0.92);
   }
 
   html { scroll-behavior: smooth; }
@@ -49,19 +79,37 @@
     font-family: var(--font-body);
     line-height: 1.7;
     overflow-x: hidden;
+    transition: background-color 0.6s ease, color 0.5s ease;
   }
 
-  body::before {
+  body::before,
+  body::after {
     content: '';
     position: fixed;
     inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  body::before {
     background:
       radial-gradient(ellipse 70% 55% at 15% 15%, rgba(217,164,74,0.05) 0%, transparent 60%),
       radial-gradient(ellipse 60% 50% at 90% 85%, rgba(40,70,140,0.25) 0%, transparent 60%),
-      linear-gradient(160deg, var(--navy) 0%, #0a141d 45%, var(--navy) 100%);
-    z-index: 0;
-    pointer-events: none;
+      linear-gradient(160deg, var(--navy) 0%, var(--page-mid) 45%, var(--navy) 100%);
+    opacity: 1;
   }
+
+  body::after {
+    background:
+      radial-gradient(ellipse 70% 55% at 15% 15%, rgba(189,125,31,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 85%, rgba(120,170,220,0.22) 0%, transparent 60%),
+      linear-gradient(160deg, var(--navy) 0%, var(--page-mid) 45%, var(--navy) 100%);
+    opacity: 0;
+  }
+
+  [data-theme="light"] body::before { opacity: 0; }
+  [data-theme="light"] body::after { opacity: 1; }
 
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
 
@@ -70,12 +118,15 @@
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     height: 68px; display: flex; align-items: center; justify-content: space-between;
     padding: 0 2rem;
-    background: rgba(15,28,40,0.7);
+    background: var(--nav-bg);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--glass-border);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
   }
+  nav.scrolled { background: var(--nav-bg-solid); }
   .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-logo img { height: 28px; width: auto; filter: invert(1); } /* invert: logo is black-on-white, this makes it white for navy nav */
+  .nav-logo img { height: 28px; width: auto; filter: invert(1); transition: filter 0.4s ease; } /* invert: logo is black-on-white, this makes it white for navy nav */
+  [data-theme="light"] .nav-logo img { filter: none; } /* light nav bg — logo's own black works as-is */
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
     color: var(--ink-dim); text-decoration: none; font-size: 13px; font-weight: 500;
@@ -83,9 +134,10 @@
   }
   .nav-links a:hover { color: var(--accent); }
   .nav-cta {
-    background: var(--accent); color: var(--navy); border: none;
+    background: var(--accent); color: var(--on-accent); border: none;
     padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700;
     letter-spacing: 0.03em; text-decoration: none; cursor: pointer;
+    transition: background-color 0.35s ease;
   }
   .nav-right { display: flex; align-items: center; gap: 14px; }
 
@@ -107,11 +159,11 @@
     .nav-links {
       position: fixed; top: 68px; left: 0; right: 0;
       flex-direction: column; gap: 0;
-      background: rgba(15,28,40,0.97);
+      background: var(--nav-bg-solid);
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--glass-border);
       max-height: 0; overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.3s ease, background-color 0.4s ease;
     }
     .nav-links.open { max-height: 260px; }
     .nav-links li { width: 100%; }
@@ -133,10 +185,6 @@
     content: ''; position: absolute; inset: 0;
     background: linear-gradient(to bottom, rgba(10,15,26,0) 55%, var(--navy) 96%);
   }
-  /* the photo is 16:9 — on a narrow/tall phone screen a 62vh-tall band forces
-     background-size:cover to crop most of the width away and chop the wordmark
-     in half. Making the band shorter (flatter) on phones keeps the aspect ratio
-     closer to the photo's own, so more of it stays visible side-to-side. */
   @media (max-width: 640px) {
     .hero-photo { height: 34vh; min-height: 240px; max-height: 320px; }
   }
@@ -159,10 +207,10 @@
 
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
   .btn-primary {
-    background: var(--accent); color: var(--navy); border: none;
+    background: var(--accent); color: var(--on-accent); border: none;
     padding: 13px 26px; border-radius: 8px; font-size: 14px; font-weight: 700;
     letter-spacing: 0.03em; text-decoration: none; display: inline-block; cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
+    transition: transform 0.2s, opacity 0.2s, background-color 0.35s ease;
   }
   .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
   .btn-ghost {
@@ -180,7 +228,7 @@
   .hero-search .field { flex: 1; padding: 10px 16px; }
   .hero-search .field b { display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px; }
   .hero-search .field span { font-size: 13.5px; color: var(--ink); }
-  .hero-search .go { background: var(--accent); color: var(--navy); border: none; border-radius: 8px; padding: 0 22px; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .hero-search .go { background: var(--accent); color: var(--on-accent); border: none; border-radius: 8px; padding: 0 22px; font-weight: 700; font-size: 13px; cursor: pointer; transition: background-color 0.35s ease; }
 
   @media (max-width: 560px) {
     .hero-search { flex-direction: column; gap: 8px; background: transparent; border: none; padding: 0; backdrop-filter: none; }
@@ -207,7 +255,7 @@
   .lg-card {
     position: relative; isolation: isolate; overflow: hidden; border-radius: 14px;
     border: 1px solid var(--glass-border); background: var(--glass-bg);
-    transition: border-color 0.3s, transform 0.4s cubic-bezier(0.175,0.885,0.32,1.6);
+    transition: border-color 0.3s, transform 0.4s cubic-bezier(0.175,0.885,0.32,1.6), background-color 0.4s ease;
   }
   .lg-card::before {
     content: ''; position: absolute; inset: 0; border-radius: inherit;
@@ -266,7 +314,7 @@
   .cta-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
   /* ── FOOTER ── */
-  footer { border-top: 1px solid var(--glass-border); padding: 2rem 0; position: relative; z-index: 1; }
+  footer { border-top: 1px solid var(--glass-border); padding: 2rem 0; position: relative; z-index: 1; transition: border-color 0.4s ease; }
   .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
   .footer-left { font-size: 13px; color: var(--ink-faint); }
   .footer-right { display: flex; gap: 1.5rem; }
@@ -280,40 +328,78 @@
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
   .reveal-delay-4 { transition-delay: 0.4s; }
-  /* ── PARALLAX (sky → mountain reveal, text tucked behind peaks) ── */
-  .pyt-parallax { position: relative; z-index: 1; }
-  .pyt-parallax__visuals {
-    position: relative; height: 100vh; min-height: 560px; overflow: hidden;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 55%),
-      linear-gradient(180deg, #2c6fad 0%, #6fa8d8 45%, #bcdcf2 75%, #eaf5fc 100%);
-    transition: background 0.6s ease;
+
+  /* ── THEME TOGGLE (sun / moon slider) ── */
+  .theme-toggle {
+    position: relative;
+    width: 60px; height: 30px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
   }
-  [data-theme="light"] .pyt-parallax__visuals {
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,255,255,0.35) 0%, transparent 55%),
-      linear-gradient(180deg, #4a8fc7 0%, #86bce3 45%, #c9e6f7 75%, #f3faff 100%);
+  .theme-toggle .toggle-sky { position: absolute; inset: 0; transition: opacity 0.5s ease; }
+  .theme-toggle .toggle-sky-night { background: linear-gradient(115deg, #0c1626 0%, #182a44 100%); opacity: 1; }
+  .theme-toggle .toggle-sky-day { background: linear-gradient(115deg, #bfe2f5 0%, #eaf6ff 100%); opacity: 0; }
+  [data-theme="light"] .theme-toggle .toggle-sky-night { opacity: 0; }
+  [data-theme="light"] .theme-toggle .toggle-sky-day { opacity: 1; }
+
+  .theme-toggle .star {
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: #fff; opacity: 0.9;
+    transition: opacity 0.4s ease;
+    animation: twinkle 2.4s ease-in-out infinite;
   }
-  .pyt-parallax__layer-title {
-    position: absolute; left: 0; right: 0; top: 34%; z-index: 2;
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    pointer-events: none;
+  .theme-toggle .star:nth-child(3) { top: 7px;  left: 34px; animation-delay: 0s; }
+  .theme-toggle .star:nth-child(4) { top: 16px; left: 42px; animation-delay: 0.6s; }
+  .theme-toggle .star:nth-child(5) { top: 9px;  left: 47px; animation-delay: 1.2s; }
+  .theme-toggle .star:nth-child(6) { top: 19px; left: 36px; animation-delay: 1.8s; }
+  [data-theme="light"] .theme-toggle .star { opacity: 0; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.15); }
   }
-  .pyt-parallax__title {
-    font-family: var(--font-display); font-weight: 700;
-    font-size: clamp(2.6rem, 8vw, 7rem); line-height: 0.98; letter-spacing: -0.03em;
-    color: #20242b; text-transform: uppercase;
+
+  .theme-toggle .cloud {
+    position: absolute; background: #fff; border-radius: 999px;
+    opacity: 0; transform: translateX(-6px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
-  .pyt-parallax__layer-img--mountain {
-    position: absolute; inset: 0; z-index: 3;
-    width: 100%; height: 100%;
-    object-fit: cover; object-position: center bottom;
-    display: block;
+  .theme-toggle .cloud:nth-child(7) { width: 16px; height: 6px; top: 6px;  left: 7px; }
+  .theme-toggle .cloud:nth-child(8) { width: 11px; height: 5px; top: 13px; left: 11px; }
+  [data-theme="light"] .theme-toggle .cloud { opacity: 0.9; transform: translateX(0); }
+
+  .theme-toggle .toggle-thumb {
+    position: absolute; top: 3px; left: 3px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #eef2fb;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.5s ease;
+    z-index: 2;
   }
-  .pyt-parallax__fade {
-    position: absolute; inset: 0; z-index: 4;
-    background: linear-gradient(to bottom, transparent 78%, var(--navy) 100%);
-    pointer-events: none;
+  [data-theme="light"] .theme-toggle .toggle-thumb { transform: translateX(30px); background: #ffd873; }
+
+  .theme-toggle .icon-moon,
+  .theme-toggle .icon-sun {
+    position: absolute; width: 15px; height: 15px;
+    transition: opacity 0.4s ease, transform 0.5s ease;
+  }
+  .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+  .theme-toggle .icon-sun  { opacity: 0; transform: rotate(90deg) scale(0.4); }
+  [data-theme="light"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+  [data-theme="light"] .theme-toggle .icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle, .theme-toggle *, body, body::before, body::after, nav, .lg-card {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
   }
 </style>
 </head>
@@ -330,6 +416,28 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+      <span class="toggle-sky toggle-sky-night"></span>
+      <span class="toggle-sky toggle-sky-day"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="cloud"></span>
+      <span class="cloud"></span>
+      <span class="toggle-thumb">
+        <svg class="icon-moon" viewBox="0 0 24 24"><path fill="#c9d3ea" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" fill="#f6a623"/>
+          <g fill="none" stroke="#f6a623" stroke-width="1.6" stroke-linecap="round">
+            <path d="M12 2v2"/><path d="M12 20v2"/>
+            <path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/>
+            <path d="M2 12h2"/><path d="M20 12h2"/>
+            <path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/>
+          </g>
+        </svg>
+      </span>
+    </button>
     <a href="https://wa.me/8801891505075" target="_blank" class="nav-cta">Book a Trip</a>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -350,7 +458,7 @@
         <div class="field"><b>Destination</b><span>Sri Lanka</span></div>
         <div class="field"><b>Month</b><span>September 2026</span></div>
         <div class="field"><b>Group Size</b><span>2 people</span></div>
-        <button class="go" onclick="pytLenis ? pytLenis.scrollTo('#destinations', {duration:1.2}) : document.querySelector('#destinations').scrollIntoView({behavior:'smooth'})">Search</button>
+        <button class="go" onclick="document.querySelector('#destinations').scrollIntoView({behavior:'smooth'})">Search</button>
       </div>
 
       <div class="hero-actions reveal reveal-delay-3" style="margin-top:2rem;">
@@ -358,17 +466,6 @@
         <a href="https://wa.me/8801891505075" target="_blank" class="btn-ghost">Chat on WhatsApp ↗</a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- PARALLAX — mountain-reveal -->
-<section class="pyt-parallax" id="parallax">
-  <div class="pyt-parallax__visuals" data-parallax-layers>
-    <div data-parallax-layer="2" class="pyt-parallax__layer-title">
-      <h2 class="pyt-parallax__title">Plan Your<br>Trip</h2>
-    </div>
-    <img src="assets/parallax-mountain.png" loading="lazy" data-parallax-layer="1" alt="" class="pyt-parallax__layer-img--mountain">
-    <div class="pyt-parallax__fade"></div>
   </div>
 </section>
 
@@ -479,9 +576,6 @@
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
 <script>
 /* ── SCROLL REVEAL ── */
 var revealObserver = new IntersectionObserver(function(entries){
@@ -503,9 +597,9 @@ document.querySelectorAll('.lg-card').forEach(function(card){
 });
 
 /* ── NAV SCROLL EFFECT ── */
+var navEl = document.querySelector('nav');
 window.addEventListener('scroll', function(){
-  var nav = document.querySelector('nav');
-  nav.style.background = window.scrollY > 50 ? 'rgba(15,28,40,0.92)' : 'rgba(15,28,40,0.7)';
+  navEl.classList.toggle('scrolled', window.scrollY > 50);
 });
 
 /* ── MOBILE NAV TOGGLE — hamburger button opens/closes the dropdown menu ── */
@@ -525,51 +619,33 @@ if (navToggle && navLinksEl) {
     });
   });
 }
-/* ── PARALLAX SCROLL (GSAP + ScrollTrigger + Lenis) ── */
-var pytLenis;
+
+/* ── THEME TOGGLE (dark / light) ── */
 (function(){
-  var root = document.querySelector('.pyt-parallax');
-  if (!root || typeof gsap === 'undefined') return;
+  var toggle = document.getElementById('themeToggle');
+  if (!toggle) return;
+  var root = document.documentElement;
 
-  gsap.registerPlugin(ScrollTrigger);
-  var triggerElement = root.querySelector('[data-parallax-layers]');
-
-  if (triggerElement) {
-    var tl = gsap.timeline({
-      scrollTrigger: { trigger: triggerElement, start: '0% 0%', end: '100% 0%', scrub: 0 }
-    });
-    var layers = [
-      { layer: '1', yPercent: 12 },   // mountain — barely moves, anchors as foreground
-      { layer: '2', yPercent: 55 }    // text — rises faster, emerges from behind the peaks
-    ];
-    layers.forEach(function(layerObj, idx){
-      tl.to(
-        triggerElement.querySelectorAll('[data-parallax-layer="' + layerObj.layer + '"]'),
-        { yPercent: layerObj.yPercent, ease: 'none' },
-        idx === 0 ? undefined : '<'
-      );
-    });
+  function applyTheme(theme){
+    if (theme === 'light') {
+      root.setAttribute('data-theme', 'light');
+      toggle.setAttribute('aria-pressed', 'true');
+      toggle.setAttribute('aria-label', 'Switch to dark mode');
+    } else {
+      root.removeAttribute('data-theme');
+      toggle.setAttribute('aria-pressed', 'false');
+      toggle.setAttribute('aria-label', 'Switch to light mode');
+    }
   }
 
-  if (typeof Lenis !== 'undefined') {
-    pytLenis = new Lenis();
-    pytLenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(function(time){ pytLenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
-  }
-})();
+  applyTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
 
-/* ── ANCHOR LINKS via Lenis (nav + hero search button) ── */
-document.querySelectorAll('a[href^="#"]').forEach(function(link){
-  link.addEventListener('click', function(e){
-    var id = link.getAttribute('href');
-    var target = document.querySelector(id);
-    if (!target) return;
-    e.preventDefault();
-    if (pytLenis) { pytLenis.scrollTo(target, { duration: 1.2 }); }
-    else { target.scrollIntoView({ behavior: 'smooth' }); }
+  toggle.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try { localStorage.setItem('pyt-theme', next); } catch(e){}
   });
-});
+})();
 </script>
 
 </body>
