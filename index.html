@@ -243,6 +243,11 @@
     transition: background-color 0.35s ease;
   }
   .nav-right { display: flex; align-items: center; gap: 14px; }
+  .nav-login-link {
+    color: var(--ink-dim); text-decoration: none; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s;
+  }
+  .nav-login-link:hover { color: var(--accent); }
 
   .nav-toggle {
     display: none; flex-direction: column; justify-content: center; gap: 5px;
@@ -672,6 +677,7 @@
         </svg>
       </span>
     </button>
+    <a href="https://planyourtrip-dashboard.vercel.app/login" class="nav-login-link">Login</a>
     <a href="https://wa.me/8801891505075" target="_blank" class="nav-cta">Book a Trip</a>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
